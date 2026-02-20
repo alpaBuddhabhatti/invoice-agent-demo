@@ -1,0 +1,9 @@
+agent-framework
+python-dotenv
+pydantic
+streamlit
+pandas
+easyocr
+pdf2image
+pypdf
+pillow

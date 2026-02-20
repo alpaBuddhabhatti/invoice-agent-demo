@@ -1,0 +1,83 @@
+"""
+Azure OpenAI Chat Client Configuration
+=======================================
+This module provides a centralized way to configure and create Azure OpenAI chat clients
+for the invoice processing agent application.
+
+Configuration:
+    - endpoint: Azure OpenAI service endpoint URL
+    - deployment_name: Name of the deployed model (e.g., gpt-4, gpt-4.1-mini)
+    - api_key: Authentication key for Azure OpenAI service
+
+Enhancement Suggestions:
+    1. Use environment variables for sensitive data (api_key should not be hardcoded)
+    2. Add retry logic with exponential backoff for API calls
+    3. Implement connection pooling for multiple concurrent requests
+    4. Add logging for debugging and monitoring
+    5. Support multiple deployment configurations (dev, staging, prod)
+    6. Add API version configuration for better version control
+    7. Implement rate limiting to avoid quota exhaustion
+    8. Add health check functionality to verify endpoint availability
+"""
+
+import os
+from dotenv import load_dotenv
+from agent_framework.azure import AzureOpenAIChatClient
+
+# Load environment variables from .env file
+load_dotenv()
+
+def get_chat_client():
+    """
+    Create and configure an Azure OpenAI chat client with API key authentication.
+    
+    Returns:
+        AzureOpenAIChatClient: Configured chat client instance
+        
+    Raises:
+        RuntimeError: If required configuration is missing
+        
+    Enhancement Ideas:
+        - Add caching to reuse client instances
+        - Support alternative authentication methods (Managed Identity, Service Principal)
+        - Add client configuration validation
+        - Implement fallback to different deployments if primary fails
+    """
+    # Azure OpenAI endpoint (without /openai/v1/ suffix for AzureOpenAIChatClient)
+    endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+
+    # Deployment name - the model deployed in Azure OpenAI
+    deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+
+    # API key from environment variables
+    api_key = os.getenv("AZURE_OPENAI_API_KEY")
+
+    # Optional API version override (useful for Foundry endpoints)
+    api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+
+    # Validate required configuration
+    missing = [
+        name
+        for name, value in {
+            "AZURE_OPENAI_ENDPOINT": endpoint,
+            "AZURE_OPENAI_DEPLOYMENT": deployment_name,
+            "AZURE_OPENAI_API_KEY": api_key,
+        }.items()
+        if not value
+    ]
+    if missing:
+        raise RuntimeError(
+            "Missing required environment variables: " + ", ".join(missing)
+        )
+
+    # Create and return the Azure OpenAI chat client
+    # Note: AzureOpenAIChatClient automatically handles API versioning
+    client_kwargs = {
+        "endpoint": endpoint,
+        "deployment_name": deployment_name,
+        "api_key": api_key,
+    }
+    if api_version:
+        client_kwargs["api_version"] = api_version
+
+    return AzureOpenAIChatClient(**client_kwargs)
