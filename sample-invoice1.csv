@@ -1,0 +1,7 @@
+Invoice No,Invoice Date,Vendor,Customer,Currency,Payment Terms
+INV-1001,2026-02-12,Contoso Consulting Pvt Ltd,Fabrikam Retail Ltd,USD,Net 15
+
+Item Code,Description,Quantity,Unit Price,Line Total
+CONS-001,Data engineering consulting (8 hrs),8,150.0,1200.0
+CONS-002,Architecture review & recommendations,1,500.0,500.0
+SUP-001,Support & handover documentation,1,250.0,250.0
