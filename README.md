@@ -352,22 +352,7 @@ Contributions are welcome! Please:
 3. Make your changes with tests
 4. Submit a pull request
 
-## 📄 License
 
-[Your License Here]
-
-## 📞 Support
-
-For issues and questions:
-- Create a GitHub issue
-- Contact: [your-email@example.com]
-- Documentation: [link-to-docs]
-
-## 🙏 Acknowledgments
-
-- Azure OpenAI Service team
-- Agent Framework contributors
-- Open-source community
 
 ---
 

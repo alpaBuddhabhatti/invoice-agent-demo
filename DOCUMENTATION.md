@@ -119,14 +119,7 @@ To improve documentation:
 4. Include examples for complex concepts
 5. Keep diagrams and architecture docs updated
 
-## 📞 Support
 
-For documentation questions:
-- Create an issue on GitHub
-- Check existing documentation first
-- Provide context and specific questions
-
----
 
 Last Updated: February 21, 2026
 Documentation Version: 1.0
