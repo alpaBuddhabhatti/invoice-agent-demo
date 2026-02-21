@@ -9,8 +9,8 @@ This project includes three different Streamlit applications, each demonstrating
 | App | Best For | Complexity | Multi-Agent | Vision Support | Tool Support |
 |-----|----------|------------|-------------|----------------|--------------|
 | **Advanced App** | General documents | ⭐ Basic | No | OCR only | No |
-| **LLM Extraction** | Complex layouts | ⭐⭐ Medium | No | Full GPT-4V | No |
-| **Multi-Agent** | Enterprise workflows | ⭐⭐⭐ Advanced | Yes (4 agents) | Full GPT-4V | Yes |
+| **LLM Extraction** | Prompt-only extraction | ⭐⭐ Medium | No | Base64-in-prompt (best-effort) | No |
+| **Multi-Agent** | Enterprise workflows | ⭐⭐⭐ Advanced | Yes (4 agents) | Base64-in-prompt (best-effort) | Yes |
 
 ---
 
@@ -57,11 +57,13 @@ streamlit run streamlit_advanced_app.py
 ## 2️⃣ streamlit_llm_extraction_app.py
 
 ### **Purpose**
-LLM-first approach using GPT-4 Vision for intelligent document understanding.
+LLM-first approach using a single chat agent.
+
+Note: the current implementation does **not** send true image/PDF inputs to a multimodal API. For binary files it includes a **base64 snippet** in the prompt as a best-effort placeholder.
 
 ### **Key Features**
-- ✅ GPT-4 Vision API for all document types
-- ✅ No OCR libraries needed (vision-based)
+- ✅ Single LLM agent for all document types
+- ✅ No OCR libraries required (but binary-file accuracy is limited without OCR or true multimodal support)
 - ✅ Better handling of complex layouts and tables
 - ✅ Semantic understanding of document context
 - ✅ Base64 encoding for binary files
@@ -71,14 +73,14 @@ LLM-first approach using GPT-4 Vision for intelligent document understanding.
 
 ### **Architecture**
 ```
-User Upload → Base64 Encode → GPT-4 Vision → Intelligent Extraction → Results
+User Upload → Base64 Snippet (binary files) → LLM Chat → Extraction → Results
                                     ↕
                               Thread Memory
 ```
 
 ### **Supported Files**
-- **Vision-based:** PDF, PNG, JPG, JPEG, GIF, BMP, WebP
-- **Text-based:** CSV, JSON, TXT
+- **Binary files:** PDF, PNG, JPG, JPEG, GIF, BMP, WebP (best-effort via base64 snippet)
+- **Text-based:** CSV, JSON, TXT (direct text in prompt)
 
 ### **When to Use**
 - Complex document layouts (invoices, forms, receipts)
@@ -88,7 +90,7 @@ User Upload → Base64 Encode → GPT-4 Vision → Intelligent Extraction → Re
 - When you want the "smartest" extraction
 
 ### **Limitations**
-- More expensive (uses vision API for everything)
+- Not true vision extraction (no multimodal message payloads)
 - Slower than traditional parsing
 - Token usage can be high with large files
 - No specialized validation or workflow steps
@@ -129,7 +131,7 @@ Upload → ExtractionAgent (vision/text/data) → ValidationAgent → AnalystAge
 
 #### **ExtractionAgent**
 - Handles images, PDFs, text documents
-- Uses GPT-4 Vision for visual understanding
+- For binary files, uses a base64 snippet in the prompt as a best-effort placeholder (not true vision)
 - Returns structured JSON with:
   - Document type
   - Confidence score
@@ -227,7 +229,7 @@ streamlit run streamlit_multi_agent_app.py
 
 ### **LLM Extraction App**
 - **Cost:** $$ (Medium)
-- Vision API for all binary files
+- Best-effort binary handling via base64-in-prompt
 - More tokens per document
 - **Best for:** Quality over cost
 
@@ -245,13 +247,13 @@ streamlit run streamlit_multi_agent_app.py
 ### **Installation**
 
 ```bash
-# Core requirements (all apps)
-pip install streamlit python-dotenv pandas
+# Recommended (all apps)
+pip install -r requirements.txt
 
 # For Advanced App (OCR)
 pip install easyocr pillow openpyxl
 
-# For LLM/Multi-Agent Apps (Vision)
+# For PDF preview
 pip install pillow pdf2image
 ```
 
@@ -270,7 +272,7 @@ AZURE_OPENAI_DEPLOYMENT=gpt-4o-mini
 # Try the simplest first
 streamlit run streamlit_advanced_app.py
 
-# Then test vision capabilities
+# Then test prompt-only LLM extraction
 streamlit run streamlit_llm_extraction_app.py
 
 # Finally explore multi-agent
@@ -287,7 +289,8 @@ streamlit run streamlit_multi_agent_app.py
 | Image Support | ✅ | ✅ | ✅ |
 | CSV/Excel Support | ✅ | ✅ | ✅ |
 | JSON Support | ✅ | ✅ | ✅ |
-| GPT-4 Vision | ❌ | ✅ | ✅ |
+| True multimodal vision inputs | ❌ | ❌ | ❌ |
+| Base64-in-prompt (binary files) | ❌ | ✅ | ✅ |
 | OCR (EasyOCR) | ✅ | ❌ | ❌ |
 | Multi-file Upload | ✅ | ✅ | ✅ |
 | Conversation Memory | ✅ | ✅ | ✅ (per agent) |
@@ -325,7 +328,7 @@ streamlit run streamlit_multi_agent_app.py
 ### **General**
 - Always set `.env` variables before running
 - Test with small files first
-- Monitor token usage in Azure portal
+- Monitor token usage in your provider portal (Foundry/resource metrics)
 - Use thread memory for multi-turn conversations
 
 ### **Advanced App**
@@ -337,7 +340,7 @@ streamlit run streamlit_multi_agent_app.py
 - Use for complex, unstructured documents
 - Monitor API costs closely
 - Leverage thread memory for document comparisons
-- Best with GPT-4 Vision models
+- Best with text-heavy documents unless you add OCR or true multimodal support
 
 ### **Multi-Agent App**
 - Enable validation for critical documents
@@ -352,15 +355,15 @@ streamlit run streamlit_multi_agent_app.py
 ### **Import Errors**
 ```bash
 # If you see: ImportError: cannot import name 'Agent'
-# Solution: Code uses ChatAgent, not Agent (already fixed)
+# Solution: ensure your active virtualenv has `agent-framework` installed and you're running from that environment.
 ```
 
-### **Vision API Errors**
+### **Binary File Extraction Limitations**
 ```bash
-# If vision calls fail, check:
-# 1. Model supports vision (gpt-4o, gpt-4-turbo, gpt-4o-mini)
-# 2. Endpoint is correct in .env
-# 3. API key has permissions
+# If PDFs/images extract poorly:
+# 1. Use the Advanced App (OCR) for images
+# 2. Convert PDFs to text (or add OCR) before sending to the LLM
+# 3. Consider implementing true multimodal message payloads if your client/model supports them
 ```
 
 ### **OCR Not Working**
@@ -380,7 +383,7 @@ pip install easyocr pillow
 
 ## 📚 Related Files
 
-- **`client.py`** - Azure OpenAI client configuration
+- **`client.py`** - Model endpoint client configuration
 - **`step*.py`** - Tutorial scripts for learning agent framework
 - **`DOCUMENTATION.md`** - Detailed project documentation
 - **`ENHANCEMENTS.md`** - Future improvement ideas
@@ -395,8 +398,8 @@ pip install easyocr pillow
    - Learn Streamlit UI patterns
    
 2. **Move to:** `streamlit_llm_extraction_app.py`
-   - See GPT-4 Vision in action
-   - Learn LLM-based extraction
+   - See prompt-only LLM extraction
+   - Learn how prompting + threads work
    
 3. **Master:** `streamlit_multi_agent_app.py`
    - Explore multi-agent patterns
@@ -408,4 +411,4 @@ pip install easyocr pillow
 
 ---
 
-*Last updated: February 16, 2026*
+*Last updated: February 21, 2026*

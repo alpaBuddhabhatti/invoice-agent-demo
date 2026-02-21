@@ -15,14 +15,14 @@ App: LLM Extraction
 Best For: Complex layouts
 Complexity: Medium
 Multi-Agent: No
-Vision Support: Full GPT-4V
+Vision Support: Base64-in-prompt (best-effort)
 Tool Support: No
 
 App: Multi-Agent
 Best For: Enterprise workflows
 Complexity: Advanced
 Multi-Agent: Yes (4 agents)
-Vision Support: Full GPT-4V
+Vision Support: Base64-in-prompt (best-effort)
 Tool Support: Yes
 
 1) streamlit_advanced_app.py
@@ -61,11 +61,13 @@ streamlit run streamlit_advanced_app.py
 2) streamlit_llm_extraction_app.py
 
 Purpose
-LLM-first approach using GPT-4 Vision for intelligent document understanding.
+LLM-first approach using a single chat agent.
+
+Note: the current implementation does not send true image/PDF inputs to a multimodal API. For binary files it includes a base64 snippet in the prompt as a best-effort placeholder.
 
 Key Features
-- GPT-4 Vision API for all document types
-- No OCR libraries needed (vision-based)
+- Single LLM agent for all document types
+- No OCR libraries required (but binary-file accuracy is limited without OCR or true multimodal support)
 - Better handling of complex layouts and tables
 - Semantic understanding of document context
 - Base64 encoding for binary files
@@ -74,12 +76,12 @@ Key Features
 - Direct text extraction for CSV/JSON files
 
 Architecture
-User Upload -> Base64 Encode -> GPT-4 Vision -> Intelligent Extraction -> Results
+User Upload -> Base64 Snippet (binary files) -> LLM Chat -> Extraction -> Results
                                 -> Thread Memory
 
 Supported Files
-- Vision-based: PDF, PNG, JPG, JPEG, GIF, BMP, WebP
-- Text-based: CSV, JSON, TXT
+- Binary files: PDF, PNG, JPG, JPEG, GIF, BMP, WebP (best-effort via base64 snippet)
+- Text-based: CSV, JSON, TXT (direct text in prompt)
 
 When to Use
 - Complex document layouts (invoices, forms, receipts)
@@ -89,7 +91,7 @@ When to Use
 - When you want the smartest extraction
 
 Limitations
-- More expensive (uses vision API for everything)
+- Not true vision extraction (no multimodal message payloads)
 - Slower than traditional parsing
 - Token usage can be high with large files
 - No specialized validation or workflow steps
@@ -123,7 +125,7 @@ Agent Roles Explained
 
 ExtractionAgent
 - Handles images, PDFs, text documents
-- Uses GPT-4 Vision for visual understanding
+- For binary files, uses a base64 snippet in the prompt as a best-effort placeholder (not true vision)
 - Returns structured JSON with:
   - Document type
   - Confidence score
@@ -215,7 +217,7 @@ Advanced App
 
 LLM Extraction App
 - Cost: Medium
-- Vision API for all binary files
+- Best-effort binary handling via base64-in-prompt
 - More tokens per document
 - Best for: Quality over cost
 
@@ -229,11 +231,11 @@ Multi-Agent App
 Getting Started
 
 Installation
-- Core requirements (all apps):
-  pip install streamlit python-dotenv pandas
+- Recommended (all apps):
+  pip install -r requirements.txt
 - For Advanced App (OCR):
   pip install easyocr pillow openpyxl
-- For LLM/Multi-Agent Apps (Vision):
+- For PDF preview:
   pip install pillow pdf2image
 
 Environment Setup
@@ -246,6 +248,7 @@ Quick Start
 - Try the simplest first:
   streamlit run streamlit_advanced_app.py
 - Then test vision capabilities:
+ - Then test prompt-only LLM extraction:
   streamlit run streamlit_llm_extraction_app.py
 - Finally explore multi-agent:
   streamlit run streamlit_multi_agent_app.py
@@ -255,7 +258,8 @@ Feature Matrix
 - Image Support: Advanced yes, LLM Extraction yes, Multi-Agent yes
 - CSV/Excel Support: Advanced yes, LLM Extraction yes, Multi-Agent yes
 - JSON Support: Advanced yes, LLM Extraction yes, Multi-Agent yes
-- GPT-4 Vision: Advanced no, LLM Extraction yes, Multi-Agent yes
+- True multimodal vision inputs: Advanced no, LLM Extraction no, Multi-Agent no
+- Base64-in-prompt (binary files): Advanced no, LLM Extraction yes, Multi-Agent yes
 - OCR (EasyOCR): Advanced yes, LLM Extraction no, Multi-Agent no
 - Multi-file Upload: Advanced yes, LLM Extraction yes, Multi-Agent yes
 - Conversation Memory: Advanced yes, LLM Extraction yes, Multi-Agent yes (per agent)
@@ -289,7 +293,7 @@ Best Practices
 General
 - Always set .env variables before running
 - Test with small files first
-- Monitor token usage in Azure portal
+- Monitor token usage in your provider portal (Foundry/resource metrics)
 - Use thread memory for multi-turn conversations
 
 Advanced App
@@ -301,7 +305,7 @@ LLM Extraction App
 - Use for complex, unstructured documents
 - Monitor API costs closely
 - Leverage thread memory for document comparisons
-- Best with GPT-4 Vision models
+- Best with text-heavy documents unless you add OCR or true multimodal support
 
 Multi-Agent App
 - Enable validation for critical documents
@@ -313,13 +317,13 @@ Troubleshooting
 
 Import Errors
 - If you see: ImportError: cannot import name 'Agent'
-  Solution: Code uses ChatAgent, not Agent (already fixed)
+  Solution: ensure your active virtualenv has agent-framework installed and you're running from that environment.
 
-Vision API Errors
-- If vision calls fail, check:
-  1. Model supports vision (gpt-4o, gpt-4-turbo, gpt-4o-mini)
-  2. Endpoint is correct in .env
-  3. API key has permissions
+Binary File Extraction Limitations
+- If PDFs/images extract poorly:
+  1. Use the Advanced App (OCR) for images
+  2. Convert PDFs to text (or add OCR) before sending to the LLM
+  3. Consider implementing true multimodal message payloads if your client/model supports them
 
 OCR Not Working
 - Install OCR dependencies:
@@ -331,7 +335,7 @@ Out of Memory
 - OCR is memory-intensive for large images
 
 Related Files
-- client.py - Azure OpenAI client configuration
+- client.py - Model endpoint client configuration
 - step*.py - Tutorial scripts for learning agent framework
 - DOCUMENTATION.md - Detailed project documentation
 - ENHANCEMENTS.md - Future improvement ideas
@@ -343,8 +347,8 @@ Learning Path
    - Learn Streamlit UI patterns
 
 2. Move to: streamlit_llm_extraction_app.py
-   - See GPT-4 Vision in action
-   - Learn LLM-based extraction
+  - See prompt-only LLM extraction
+  - Learn how prompting and threads work
 
 3. Master: streamlit_multi_agent_app.py
    - Explore multi-agent patterns
@@ -354,4 +358,4 @@ Learning Path
    - Learn agent framework fundamentals
    - Build custom agents and tools
 
-Last updated: February 16, 2026
+Last updated: February 21, 2026

@@ -95,8 +95,8 @@ Each Python file includes:
 ## 📝 Additional Resources
 
 ### External Documentation
-- [Microsoft Foundry (Azure AI Foundry)](https://learn.microsoft.com/azure/ai-studio/)
-- [Azure OpenAI Service (endpoint format reference)](https://learn.microsoft.com/azure/ai-services/openai/)
+- [Microsoft Foundry](https://learn.microsoft.com/azure/ai-studio/)
+- [OpenAI-compatible endpoint format reference](https://learn.microsoft.com/azure/ai-services/openai/)
 - [Agent Framework Documentation](https://github.com/microsoft/agent-framework)
 - [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
 

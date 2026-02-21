@@ -130,9 +130,9 @@ Notes:
 
 - Use environment variables for sensitive data
 - Add `.env` to `.gitignore`
-- Use Azure Managed Identity in production
+- Use Managed Identity in production (where supported)
 - Rotate API keys regularly
-- Use Azure Key Vault for secrets management
+- Use Key Vault (or another secret store) for secrets management
 
 ## 💻 Usage
 
@@ -174,7 +174,7 @@ Each step file demonstrates different capabilities:
 
 ```
 invoice-agent-demo/
-├── client.py                   # Azure OpenAI client configuration
+├── client.py                   # Model endpoint client configuration
 ├── step1_basic_agent.py        # Basic invoice summarization
 ├── step2_thread_memory.py      # Conversation memory demo
 ├── step3_invoice_tool.py       # Single tool usage
@@ -256,7 +256,7 @@ def validate_invoice(amount: int, currency: str) -> str:
 ## 🚀 Enhancement Roadmap
 
 ### Phase 1: Core Improvements
-- [ ] Move API keys to Azure Key Vault
+- [ ] Move API keys to a secret store (for example Key Vault)
 - [ ] Add comprehensive error handling
 - [ ] Implement structured logging
 - [ ] Add unit and integration tests
@@ -288,7 +288,7 @@ def validate_invoice(amount: int, currency: str) -> str:
 
 ### Security
 - Never hardcode API keys
-- Use environment variables or Azure Key Vault
+- Use environment variables or a secret store (for example Key Vault)
 - Implement least-privilege access
 - Enable audit logging
 - Regular security assessments
@@ -324,12 +324,12 @@ def validate_invoice(amount: int, currency: str) -> str:
 - Ensure API key has proper permissions
 
 **Issue**: `404 Resource not found`
-- **Solution**: Verify deployment name matches Azure portal
+- **Solution**: Verify the deployment/model name matches what you configured in Foundry / your provider portal
 - Check endpoint URL format (no `/openai/v1/` suffix for AzureOpenAIChatClient)
 
 **Issue**: `400 API version not supported`
 - **Solution**: Update to supported API version (2024-02-01, 2023-12-01-preview)
-- Check Azure portal for available versions
+- Check your provider documentation / deployment portal for available versions
 
 **Issue**: Slow response times
 - **Solution**: Monitor token usage
