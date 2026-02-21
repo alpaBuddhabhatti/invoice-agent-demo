@@ -29,7 +29,7 @@ Enhancement Suggestions:
 """
 
 import asyncio
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from client import get_chat_client
 
 # Define validation tool with business logic
@@ -96,8 +96,8 @@ async def main():
         - Add validation metrics tracking
     """
     # Create agent specialized in invoice validation
-    agent = ChatAgent(
-        chat_client=get_chat_client(),
+    agent = Agent(
+        client=get_chat_client(),
         instructions="Validate invoices according to company approval policies.",
         tools=[validate_invoice]
     )

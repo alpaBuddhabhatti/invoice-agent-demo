@@ -46,25 +46,27 @@ def get_chat_client():
     # Azure OpenAI endpoint (without /openai/v1/ suffix for AzureOpenAIChatClient)
     endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 
-    # Deployment name - the model deployed in Azure OpenAI
-    deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+    # Deployment name - the model deployed in Azure OpenAI.
+    # Prefer AZURE_OPENAI_DEPLOYMENT, but accept AZURE_OPENAI_DEPLOYMENT_NAME
+    # for compatibility with older docs/config.
+    deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT") or os.getenv(
+        "AZURE_OPENAI_DEPLOYMENT_NAME"
+    )
 
     # API key from environment variables
     api_key = os.getenv("AZURE_OPENAI_API_KEY")
 
-    # Optional API version override (useful for Foundry endpoints)
+    # Optional API version override.
     api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
     # Validate required configuration
-    missing = [
-        name
-        for name, value in {
-            "AZURE_OPENAI_ENDPOINT": endpoint,
-            "AZURE_OPENAI_DEPLOYMENT": deployment_name,
-            "AZURE_OPENAI_API_KEY": api_key,
-        }.items()
-        if not value
-    ]
+    missing = []
+    if not endpoint:
+        missing.append("AZURE_OPENAI_ENDPOINT")
+    if not deployment_name:
+        missing.append("AZURE_OPENAI_DEPLOYMENT (preferred) or AZURE_OPENAI_DEPLOYMENT_NAME")
+    if not api_key:
+        missing.append("AZURE_OPENAI_API_KEY")
     if missing:
         raise RuntimeError(
             "Missing required environment variables: " + ", ".join(missing)

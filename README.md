@@ -1,6 +1,6 @@
-# Invoice Processing Agent – Azure OpenAI Demo
+# Invoice Processing Agent – Azure AI Foundry / Azure OpenAI Demo
 
-A comprehensive demonstration of building AI-powered invoice processing agents using Azure OpenAI and the Agent Framework. This project shows progressive complexity from basic agents to multi-tool workflows with business logic.
+A comprehensive demonstration of building AI-powered invoice processing agents using Azure AI Foundry (for model/project management) and Azure OpenAI (for model inference) with the Agent Framework. This project shows progressive complexity from basic agents to multi-tool workflows with business logic.
 
 ## 📋 Table of Contents
 
@@ -111,13 +111,17 @@ Create a `.env` file in the project root:
 ```env
 # Azure OpenAI Configuration
 AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4.1-mini
+AZURE_OPENAI_DEPLOYMENT=gpt-4.1-mini
 AZURE_OPENAI_API_KEY=your-api-key-here
 
 # Optional: Advanced Configuration
 AZURE_OPENAI_API_VERSION=2024-02-01
 LOG_LEVEL=INFO
 ```
+
+Notes:
+- `AZURE_OPENAI_DEPLOYMENT` is the preferred variable name. For compatibility, the code also accepts `AZURE_OPENAI_DEPLOYMENT_NAME`.
+- The endpoint must be an Azure OpenAI *resource* endpoint (e.g. `https://<resource>.openai.azure.com/`). Azure AI Foundry *project* endpoints are not the same thing and won’t work with the Azure OpenAI chat client used in this repo.
 
 ### Security Best Practices
 

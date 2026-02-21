@@ -29,7 +29,7 @@ Enhancement Suggestions:
 """
 
 import asyncio
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from client import get_chat_client
 
 # Tool 1: Invoice Extraction
@@ -104,8 +104,8 @@ async def main():
     """
     # Create agent with multiple tools
     # The agent will orchestrate tool usage automatically
-    agent = ChatAgent(
-        chat_client=get_chat_client(), 
+    agent = Agent(
+        client=get_chat_client(), 
         instructions='Process invoices.', 
         tools=[extract_invoice, validate_invoice]
     )

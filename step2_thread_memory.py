@@ -28,7 +28,7 @@ Enhancement Suggestions:
 """
 
 import asyncio
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from client import get_chat_client
 
 async def main():
@@ -43,8 +43,8 @@ async def main():
     """
     # Create agent with instructions for answering invoice questions
     # This agent is designed for interactive Q&A about invoices
-    agent = ChatAgent(
-        chat_client=get_chat_client(), 
+    agent = Agent(
+        client=get_chat_client(),
         instructions='Answer invoice questions.'
     )
     

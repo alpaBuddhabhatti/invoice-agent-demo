@@ -29,7 +29,7 @@ Enhancement Suggestions:
 """
 
 import asyncio
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from client import get_chat_client
 
 # Define a custom tool for invoice extraction
@@ -77,15 +77,20 @@ async def main():
     """
     # Create agent with extraction instructions and tools
     # The agent knows when to use the extract_invoice tool
-    agent = ChatAgent(
-        chat_client=get_chat_client(),
-        instructions="Extract invoice details accurately.",
+    agent = Agent(
+        client=get_chat_client(),
+        instructions=(
+            "Extract invoice details accurately. "
+            "When invoice text is provided, call the extract_invoice tool first, "
+            "then summarize the extracted fields."
+        ),
         tools=[extract_invoice]  # Register the tool
     )
 
     # Run the agent with a request that triggers tool usage
     # The agent will automatically call extract_invoice() when appropriate
-    result = await agent.run("Extract invoice details")
+    invoice_text = "Invoice INV-1001 from Contoso Ltd for 1200 USD"
+    result = await agent.run(f"Extract invoice details from: {invoice_text}")
     
     # Display the result
     # The agent will present the extracted data in a natural language format

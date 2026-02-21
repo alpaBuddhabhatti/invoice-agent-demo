@@ -31,7 +31,7 @@ class AgentConfig:
         """Load configuration from environment variables"""
         return cls(
             endpoint=os.getenv('AZURE_OPENAI_ENDPOINT'),
-            deployment_name=os.getenv('AZURE_OPENAI_DEPLOYMENT_NAME'),
+            deployment_name=os.getenv('AZURE_OPENAI_DEPLOYMENT') or os.getenv('AZURE_OPENAI_DEPLOYMENT_NAME'),
             api_key=os.getenv('AZURE_OPENAI_API_KEY'),
             api_version=os.getenv('AZURE_OPENAI_API_VERSION', '2024-02-01'),
             max_retries=int(os.getenv('MAX_RETRIES', '3')),
