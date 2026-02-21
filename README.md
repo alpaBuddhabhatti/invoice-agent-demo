@@ -1,6 +1,6 @@
-# Invoice Processing Agent – Azure AI Foundry / Azure OpenAI Demo
+# Invoice Processing Agent – Microsoft Foundry Demo
 
-A comprehensive demonstration of building AI-powered invoice processing agents using Azure AI Foundry (for model/project management) and Azure OpenAI (for model inference) with the Agent Framework. This project shows progressive complexity from basic agents to multi-tool workflows with business logic.
+A comprehensive demonstration of building AI-powered invoice processing agents using Microsoft Foundry (for model/project management) with the Agent Framework. This project shows progressive complexity from basic agents to multi-tool workflows with business logic.
 
 ## 📋 Table of Contents
 
@@ -25,7 +25,7 @@ This project demonstrates how to build intelligent invoice processing systems us
 - **Memory Management**: Conversation context with thread-based memory
 - **Tool Integration**: Custom functions for extraction and validation
 - **Business Logic**: Approval workflows and conditional processing
-- **Azure OpenAI Integration**: Production-ready authentication and configuration
+- **Model Endpoint Integration**: Production-ready authentication and configuration
 
 ### Use Cases
 
@@ -49,8 +49,8 @@ This project demonstrates how to build intelligent invoice processing systems us
          │
          ▼
 ┌──────────────────────────────┐
-│ Azure OpenAI Deployment      │ (managed via Foundry)
-│  Chat Client (resource API)  │
+│ Model Deployment             │ (managed via Foundry)
+│  Chat Client (OpenAI-style)  │
 └───────────────┬──────────────┘
          │
          ▼
@@ -67,9 +67,9 @@ This project demonstrates how to build intelligent invoice processing systems us
 ## 📋 Prerequisites
 
 - **Python**: 3.8 or higher (3.11 recommended)
-- **Azure AI Foundry / Azure OpenAI**:
-   - A model deployment (often created/managed in Azure AI Foundry)
-   - An Azure OpenAI *resource endpoint* + API key to call that deployment
+- **Microsoft Foundry + model endpoint**:
+   - A model deployment (created/managed in Microsoft Foundry)
+   - A compatible endpoint + API key to call that deployment
 - **Libraries** (installed via `requirements.txt`):
    - `agent-framework`
    - `python-dotenv`
@@ -110,7 +110,7 @@ This project demonstrates how to build intelligent invoice processing systems us
 Create a `.env` file in the project root:
 
 ```env
-# Azure OpenAI Configuration
+# Model Endpoint Configuration
 AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
 AZURE_OPENAI_DEPLOYMENT=gpt-4.1-mini
 AZURE_OPENAI_API_KEY=your-api-key-here
@@ -122,7 +122,7 @@ LOG_LEVEL=INFO
 
 Notes:
 - `AZURE_OPENAI_DEPLOYMENT` is the preferred variable name. For compatibility, the code also accepts `AZURE_OPENAI_DEPLOYMENT_NAME`.
-- The endpoint must be an Azure OpenAI *resource* endpoint (e.g. `https://<resource>.openai.azure.com/`). Azure AI Foundry *project* endpoints are not the same thing and won’t work with the Azure OpenAI chat client used in this repo.
+- The endpoint must be a resource-style model endpoint (for this repo’s default client: `https://<resource>.openai.azure.com/`). Microsoft Foundry *project* URLs are different and won’t work as `AZURE_OPENAI_ENDPOINT`.
 
 ### Security Best Practices
 

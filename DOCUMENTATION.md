@@ -15,7 +15,7 @@ This repository contains documentation for the Invoice Processing Agent project.
 ### Code Documentation
 All Python files include comprehensive inline documentation:
 
-- **[client.py](../client.py)** - Azure OpenAI client configuration with comments
+- **[client.py](client.py)** - Model chat client configuration (reads from `.env`)
 - **[step1_basic_agent.py](step1_basic_agent.py)** - Basic agent implementation with enhancement ideas
 - **[step2_thread_memory.py](step2_thread_memory.py)** - Thread-based memory demonstration
 - **[step3_invoice_tool.py](step3_invoice_tool.py)** - Single tool usage example
@@ -95,14 +95,14 @@ Each Python file includes:
 ## 📝 Additional Resources
 
 ### External Documentation
-- [Azure AI Foundry](https://learn.microsoft.com/azure/ai-studio/)
-- [Azure OpenAI Service](https://learn.microsoft.com/azure/ai-services/openai/)
+- [Microsoft Foundry (Azure AI Foundry)](https://learn.microsoft.com/azure/ai-studio/)
+- [Azure OpenAI Service (endpoint format reference)](https://learn.microsoft.com/azure/ai-services/openai/)
 - [Agent Framework Documentation](https://github.com/microsoft/agent-framework)
 - [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
 
 Endpoint note:
-- This repo’s default runtime uses `AzureOpenAIChatClient` (see `client.py`), which expects an Azure OpenAI *resource endpoint* like `https://<resource>.openai.azure.com/`.
-- Azure AI Foundry project endpoints are different from Azure OpenAI resource endpoints; using a project URL as `AZURE_OPENAI_ENDPOINT` can cause API route/version errors.
+- This repo’s default runtime uses `AzureOpenAIChatClient` (see `client.py`), which expects a resource-style model endpoint like `https://<resource>.openai.azure.com/`.
+- Microsoft Foundry project URLs are different from resource endpoints; using a project URL as `AZURE_OPENAI_ENDPOINT` can cause API route/version errors.
 
 ### Related Topics
 - Invoice processing automation
