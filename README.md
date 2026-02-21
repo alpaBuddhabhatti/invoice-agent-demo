@@ -48,10 +48,10 @@ This project demonstrates how to build intelligent invoice processing systems us
 └────────┬────────┘
          │
          ▼
-┌─────────────────┐
-│ Azure OpenAI    │ (GPT-4 / GPT-4.1-mini)
-│  Chat Client    │
-└────────┬────────┘
+┌──────────────────────────────┐
+│ Azure OpenAI Deployment      │ (managed via Foundry)
+│  Chat Client (resource API)  │
+└───────────────┬──────────────┘
          │
          ▼
 ┌─────────────────┐
@@ -66,13 +66,14 @@ This project demonstrates how to build intelligent invoice processing systems us
 
 ## 📋 Prerequisites
 
-- **Python**: 3.8 or higher
-- **Azure OpenAI Service**: Active subscription with deployed model
-- **API Access**: Azure OpenAI API key and endpoint
-- **Libraries**: 
-  - `agent-framework`
-  - `openai`
-  - `python-dotenv`
+- **Python**: 3.8 or higher (3.11 recommended)
+- **Azure AI Foundry / Azure OpenAI**:
+   - A model deployment (often created/managed in Azure AI Foundry)
+   - An Azure OpenAI *resource endpoint* + API key to call that deployment
+- **Libraries** (installed via `requirements.txt`):
+   - `agent-framework`
+   - `python-dotenv`
+   - `streamlit` (only needed for the Streamlit demos)
 
 ## 🚀 Installation
 
