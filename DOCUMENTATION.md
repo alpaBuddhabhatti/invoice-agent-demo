@@ -1,7 +1,8 @@
 # Project Documentation Index
 
 This repository contains documentation for the Invoice Processing Agent project.
-<img width="1200" height="721" alt="image" src="https://github.com/user-attachments/assets/52fbbd3d-8940-4c18-b9e3-470df07e5edf" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f973fd53-afd4-40f7-a6bc-a828e4434c2d" />
+
 
 
 ## 📚 Available Documents
