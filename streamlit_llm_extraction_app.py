@@ -203,6 +203,7 @@ def process_file_with_llm(uploaded_file) -> dict:
         "name": file_name,
         "type": file_type,
         "size": len(raw_bytes),
+        "raw_bytes": raw_bytes,
         "extracted_content": "",
         "preview": "",
         "extraction_status": "pending"
@@ -329,12 +330,21 @@ with tabs[0]:
                 with col2:
                     if st.button("🔄 Re-extract", key=f"reex_{doc_name}"):
                         with st.spinner("Processing..."):
+                            class _UploadedFileLike:
+                                def __init__(self, file_type: str, name: str, raw_bytes: bytes):
+                                    self.type = file_type
+                                    self.name = name
+                                    self._raw_bytes = raw_bytes
+
+                                def getvalue(self) -> bytes:
+                                    return self._raw_bytes
+
                             doc_data = process_file_with_llm(
-                                type('obj', (object,), {
-                                    'type': doc_data['type'],
-                                    'name': doc_name,
-                                    'getvalue': lambda: b''  # Would need original bytes
-                                })()
+                                _UploadedFileLike(
+                                    file_type=doc_data["type"],
+                                    name=doc_name,
+                                    raw_bytes=doc_data.get("raw_bytes", b""),
+                                )
                             )
                             st.session_state.documents[doc_name] = doc_data
                             st.rerun()

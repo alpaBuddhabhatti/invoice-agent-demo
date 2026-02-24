@@ -45,6 +45,13 @@ try:
 except ImportError:
     OCR_SUPPORT = False
 
+# NumPy is required by easyocr for image arrays
+try:
+    import numpy as np
+    NUMPY_SUPPORT = True
+except ImportError:
+    NUMPY_SUPPORT = False
+
 # Image support
 try:
     from PIL import Image
@@ -89,13 +96,14 @@ def get_ocr_reader():
 
 def extract_text_from_image(image_bytes: bytes) -> str:
     """Extract text from image using OCR."""
-    if not OCR_SUPPORT or not PIL_SUPPORT:
-        return "[OCR not available - install easyocr and pillow]"
+    if not OCR_SUPPORT or not PIL_SUPPORT or not NUMPY_SUPPORT:
+        return "[OCR not available - install easyocr, pillow, and numpy]"
 
     try:
         image = Image.open(io.BytesIO(image_bytes))
         reader = get_ocr_reader()
-        results = reader.readtext(image)
+        image_array = np.array(image)
+        results = reader.readtext(image_array)
         text = '\n'.join([line[1] for line in results])
         return text if text.strip() else "[No text detected in image]"
     except Exception as e:
